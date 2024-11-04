@@ -175,3 +175,81 @@ describe('GET /api/users/current', () => {
     });
 
 });
+
+describe('PATCH /api/users/current', () => {
+
+    beforeEach(async () => {
+        await UserTest.create()
+    })
+
+    afterEach(async () => {
+        await UserTest.delete()
+    })
+
+    it('should be rejected if request is invalid', async () => {
+        const response = await app.request('/api/users/current', {
+            method: 'patch',
+            headers: {
+                'Authorization': 'test'
+            },
+            body: JSON.stringify({
+                name: "",
+                password: ""
+            })
+        })
+
+        expect(response.status).toBe(400)
+
+        const body = await response.json()
+        expect(body.errors).toBeDefined()
+    });
+
+    it('should be able to update name', async () => {
+        const response = await app.request('/api/users/current', {
+            method: 'patch',
+            headers: {
+                'Authorization': 'test'
+            },
+            body: JSON.stringify({
+                name: "Eko"
+            })
+        })
+
+        expect(response.status).toBe(200)
+
+        const body = await response.json()
+        logger.error(body)
+        expect(body.data).toBeDefined()
+        expect(body.data.name).toBe("Eko")
+    });
+
+    it('should be able to update password', async () => {
+        let response = await app.request('/api/users/current', {
+            method: 'patch',
+            headers: {
+                'Authorization': 'test'
+            },
+            body: JSON.stringify({
+                password: "baru"
+            })
+        })
+
+        expect(response.status).toBe(200)
+
+        const body = await response.json()
+        logger.error(body)
+        expect(body.data).toBeDefined()
+        expect(body.data.name).toBe("test")
+
+        response = await app.request('/api/users/login', {
+            method: 'post',
+            body: JSON.stringify({
+                username: "test",
+                password: "baru"
+            })
+        })
+
+        expect(response.status).toBe(200)
+    });
+
+});
