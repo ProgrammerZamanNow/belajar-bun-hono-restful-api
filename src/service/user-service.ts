@@ -1,4 +1,4 @@
-import {RegisterUserRequest, toUserResponse, UserResponse} from "../model/user-model";
+import {LoginUserRequest, RegisterUserRequest, toUserResponse, UserResponse} from "../model/user-model";
 import {UserValidation} from "../validation/user-validation";
 import {prismaClient} from "../application/database";
 import {HTTPException} from "hono/http-exception";
@@ -30,6 +30,42 @@ export class UserService {
         })
 
         return toUserResponse(user)
+    }
+
+    static async login(request: LoginUserRequest): Promise<UserResponse> {
+        request = UserValidation.LOGIN.parse(request)
+
+        let user = await prismaClient.user.findUnique({
+            where: {
+                username: request.username
+            }
+        })
+
+        if (!user) {
+            throw new HTTPException(401, {
+                message: "Username or password is wrong"
+            })
+        }
+
+        const isPasswordValid = await Bun.password.verify(request.password, user.password, 'bcrypt')
+        if (!isPasswordValid) {
+            throw new HTTPException(401, {
+                message: "Username or password is wrong"
+            })
+        }
+
+        user = await prismaClient.user.update({
+            where: {
+                username: request.username
+            },
+            data: {
+                token: crypto.randomUUID()
+            }
+        })
+
+        const response = toUserResponse(user)
+        response.token = user.token!;
+        return response
     }
 
 }
