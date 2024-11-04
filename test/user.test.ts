@@ -253,3 +253,51 @@ describe('PATCH /api/users/current', () => {
     });
 
 });
+
+describe('DELETE /api/users/current', () => {
+
+    beforeEach(async () => {
+        await UserTest.create()
+    })
+
+    afterEach(async () => {
+        await UserTest.delete()
+    })
+
+    it('should be able to logout', async () => {
+        const response = await app.request('/api/users/current', {
+            method: 'delete',
+            headers: {
+                'Authorization': 'test'
+            }
+        })
+
+        expect(response.status).toBe(200)
+
+        const body = await response.json()
+        expect(body.data).toBe(true)
+    });
+
+    it('should not be able to logout', async () => {
+        let response = await app.request('/api/users/current', {
+            method: 'delete',
+            headers: {
+                'Authorization': 'test'
+            }
+        })
+
+        expect(response.status).toBe(200)
+
+        const body = await response.json()
+        expect(body.data).toBe(true)
+
+        response = await app.request('/api/users/current', {
+            method: 'delete',
+            headers: {
+                'Authorization': 'test'
+            }
+        })
+        expect(response.status).toBe(401)
+    });
+
+});
