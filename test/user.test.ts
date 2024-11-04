@@ -122,3 +122,56 @@ describe('POST /api/users/login', () => {
     });
 
 });
+
+describe('GET /api/users/current', () => {
+
+    beforeEach(async () => {
+        await UserTest.create()
+    })
+
+    afterEach(async () => {
+        await UserTest.delete()
+    })
+
+    it('should be able to get user', async () => {
+        const response = await app.request('/api/users/current', {
+            method: 'get',
+            headers: {
+                'Authorization': 'test'
+            }
+        })
+
+        expect(response.status).toBe(200)
+
+        const body = await response.json()
+        expect(body.data).toBeDefined()
+        expect(body.data.username).toBe("test")
+        expect(body.data.name).toBe("test")
+    });
+
+    it('should not be able to get user if token is invalid', async () => {
+        const response = await app.request('/api/users/current', {
+            method: 'get',
+            headers: {
+                'Authorization': 'salah'
+            }
+        })
+
+        expect(response.status).toBe(401)
+
+        const body = await response.json()
+        expect(body.errors).toBeDefined()
+    });
+
+    it('should not be able to get user if there is no Authorization header', async () => {
+        const response = await app.request('/api/users/current', {
+            method: 'get'
+        })
+
+        expect(response.status).toBe(401)
+
+        const body = await response.json()
+        expect(body.errors).toBeDefined()
+    });
+
+});
