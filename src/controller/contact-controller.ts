@@ -3,7 +3,7 @@ import {ApplicationVariables} from "../model/app-model";
 import {authMiddleware} from "../middleware/auth-middleware";
 import {User} from "@prisma/client";
 import {ContactService} from "../service/contact-service";
-import {CreateContactRequest, UpdateContactRequest} from "../model/contact-model";
+import {CreateContactRequest, SearchContactRequest, UpdateContactRequest} from "../model/contact-model";
 
 export const contactController = new Hono<{ Variables: ApplicationVariables }>();
 contactController.use(authMiddleware)
@@ -48,4 +48,17 @@ contactController.delete('/api/contacts/:id', async (c) => {
     return c.json({
         data: response
     })
+})
+
+contactController.get('/api/contacts', async (c) => {
+    const user = c.get('user') as User
+    const request: SearchContactRequest = {
+        name: c.req.query("name"),
+        email: c.req.query("email"),
+        phone: c.req.query("phone"),
+        page: c.req.query("page") ? Number(c.req.query("page")) : 1,
+        size: c.req.query("size") ? Number(c.req.query("size")) : 10,
+    }
+    const response = await ContactService.search(user, request)
+    return c.json(response)
 })

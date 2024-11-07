@@ -40,13 +40,19 @@ export class ContactTest {
     static async create() {
         await prismaClient.contact.create({
             data: {
-                first_name: "Test",
-                last_name: "Test",
+                first_name: "Eko",
+                last_name: "Kurniawan",
                 email: "test@gmail.com",
                 phone: "123123",
                 username: "test"
             }
         })
+    }
+
+    static async createMany(n: number) {
+        for (let i = 0; i < n; i++) {
+            await this.create()
+        }
     }
 
     static async get(): Promise<Contact> {
