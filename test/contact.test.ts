@@ -145,3 +145,82 @@ describe('GEt /api/contacts/{id}', () => {
         expect(body.data.id).toBe(contact.id)
     });
 })
+
+describe('PUT /api/contacts/{id}', () => {
+
+    beforeEach(async () => {
+        await ContactTest.deleteAll()
+        await UserTest.create()
+        await ContactTest.create()
+    })
+
+    afterEach(async () => {
+        await ContactTest.deleteAll()
+        await UserTest.delete()
+    })
+
+    it('should rejected update contact if request is invalid', async () => {
+        const contact = await ContactTest.get()
+
+        const response = await app.request('/api/contacts/' + contact.id, {
+            method: 'put',
+            headers: {
+                'Authorization': 'test'
+            },
+            body: JSON.stringify({
+                first_name: ""
+            })
+        })
+
+        expect(response.status).toBe(400)
+
+        const body = await response.json()
+        expect(body.errors).toBeDefined()
+    });
+
+    it('should rejected update contact if id is not found', async () => {
+        const contact = await ContactTest.get()
+
+        const response = await app.request('/api/contacts/' + (contact.id + 1), {
+            method: 'put',
+            headers: {
+                'Authorization': 'test'
+            },
+            body: JSON.stringify({
+                first_name: "Eko"
+            })
+        })
+
+        expect(response.status).toBe(404)
+
+        const body = await response.json()
+        expect(body.errors).toBeDefined()
+    });
+
+    it('should success update contact if request is valid', async () => {
+        const contact = await ContactTest.get()
+
+        const response = await app.request('/api/contacts/' + contact.id, {
+            method: 'put',
+            headers: {
+                'Authorization': 'test'
+            },
+            body: JSON.stringify({
+                first_name: "Eko",
+                last_name: "Khannedy",
+                email: "eko@gmail.com",
+                phone: "1231234"
+            })
+        })
+
+        expect(response.status).toBe(200)
+
+        const body = await response.json()
+        expect(body.data).toBeDefined()
+        expect(body.data.first_name).toBe("Eko")
+        expect(body.data.last_name).toBe("Khannedy")
+        expect(body.data.email).toBe("eko@gmail.com")
+        expect(body.data.phone).toBe("1231234")
+    });
+
+});
