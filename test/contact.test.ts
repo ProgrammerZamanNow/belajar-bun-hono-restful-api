@@ -224,3 +224,50 @@ describe('PUT /api/contacts/{id}', () => {
     });
 
 });
+
+describe('DELETE /api/contacts/{id}', () => {
+
+    beforeEach(async () => {
+        await ContactTest.deleteAll()
+        await UserTest.create()
+        await ContactTest.create()
+    })
+
+    afterEach(async () => {
+        await ContactTest.deleteAll()
+        await UserTest.delete()
+    })
+
+    it('should rejected if contact id is not found', async () => {
+        const contact = await ContactTest.get()
+
+        const response = await app.request('/api/contacts/' + (contact.id + 1), {
+            method: 'delete',
+            headers: {
+                'Authorization': 'test'
+            }
+        })
+
+        expect(response.status).toBe(404)
+
+        const body = await response.json()
+        expect(body.errors).toBeDefined()
+    });
+
+    it('should success if contact is exists', async () => {
+        const contact = await ContactTest.get()
+
+        const response = await app.request('/api/contacts/' + contact.id, {
+            method: 'delete',
+            headers: {
+                'Authorization': 'test'
+            }
+        })
+
+        expect(response.status).toBe(200)
+
+        const body = await response.json()
+        expect(body.data).toBe(true)
+    });
+
+});

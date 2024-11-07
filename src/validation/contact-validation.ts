@@ -19,4 +19,6 @@ export class ContactValidation {
         phone: z.string().min(1).max(20).optional(),
     })
 
+    static readonly DELETE: ZodType = z.number().positive()
+
 }
