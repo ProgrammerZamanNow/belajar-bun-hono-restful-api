@@ -9,4 +9,6 @@ export class ContactValidation {
         phone: z.string().min(1).max(20).optional(),
     })
 
+    static readonly GET: ZodType = z.number().positive()
+
 }

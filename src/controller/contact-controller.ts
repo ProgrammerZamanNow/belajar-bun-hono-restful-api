@@ -17,3 +17,13 @@ contactController.post('/api/contacts', async (c) => {
         data: response
     })
 })
+
+contactController.get('/api/contacts/:id', async (c) => {
+    const user = c.get('user') as User
+    const contactId = Number(c.req.param("id"))
+    const response = await ContactService.get(user, contactId)
+
+    return c.json({
+        data: response
+    })
+})
