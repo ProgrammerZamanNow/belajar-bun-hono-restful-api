@@ -1,0 +1,147 @@
+GET http://localhost:3000
+
+### Register User
+POST http://localhost:3000/api/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username" : "eko",
+  "password" : "eko123",
+  "name" : "Eko Kurniawan"
+}
+
+### Login User
+POST http://localhost:3000/api/users/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username" : "eko",
+  "password" : "rahasia"
+}
+
+### Get Current User
+GET http://localhost:3000/api/users/current
+Content-Type: application/json
+Accept: application/json
+Authorization: 9e6e8c80-bc4b-4936-8ed8-debbe9c4c343
+
+### Update Current User
+PATCH http://localhost:3000/api/users/current
+Content-Type: application/json
+Accept: application/json
+Authorization: 9e6e8c80-bc4b-4936-8ed8-debbe9c4c343
+
+{
+  "name" : "Eko Kurniawan Khannedy"
+}
+
+### Update Password
+PATCH http://localhost:3000/api/users/current
+Content-Type: application/json
+Accept: application/json
+Authorization: 9e6e8c80-bc4b-4936-8ed8-debbe9c4c343
+
+{
+  "password" : "rahasia"
+}
+
+### Logout User
+DELETE http://localhost:3000/api/users/current
+Content-Type: application/json
+Accept: application/json
+Authorization: 9e6e8c80-bc4b-4936-8ed8-debbe9c4c343
+
+### Create Contact
+POST http://localhost:3000/api/contacts
+Content-Type: application/json
+Accept: application/json
+Authorization: 9e6e8c80-bc4b-4936-8ed8-debbe9c4c343
+
+{
+  "first_name" : "Salah 2",
+  "last_name" : "Last Name",
+  "email" : "kontak2@gmail.com",
+  "phone" : "23423432434"
+}
+
+### Search Contact
+GET http://localhost:3000/api/contacts
+Content-Type: application/json
+Accept: application/json
+Authorization: 9e6e8c80-bc4b-4936-8ed8-debbe9c4c343
+
+### Detail Contact
+GET http://localhost:3000/api/contacts/1446
+Content-Type: application/json
+Accept: application/json
+Authorization: 9e6e8c80-bc4b-4936-8ed8-debbe9c4c343
+
+### Update Contact
+PUT http://localhost:3000/api/contacts/1444
+Content-Type: application/json
+Accept: application/json
+Authorization: 9e6e8c80-bc4b-4936-8ed8-debbe9c4c343
+
+{
+  "id": 1444,
+  "first_name": "Kontak 1",
+  "last_name": "Eko",
+  "email": "eko@gmail.com",
+  "phone": "123123"
+}
+
+### Delete Contact
+DELETE http://localhost:3000/api/contacts/1446
+Content-Type: application/json
+Accept: application/json
+Authorization: 9e6e8c80-bc4b-4936-8ed8-debbe9c4c343
+
+### Create Address
+POST http://localhost:3000/api/contacts/1444/addresses
+Content-Type: application/json
+Accept: application/json
+Authorization: 9e6e8c80-bc4b-4936-8ed8-debbe9c4c343
+
+{
+  "street" : "Jalan A",
+  "city" : "Jakarta",
+  "province" : "DKI Jakarta",
+  "country" : "Indonesia",
+  "postal_code" : "234234"
+}
+
+
+### List Address
+GET http://localhost:3000/api/contacts/1444/addresses
+Content-Type: application/json
+Accept: application/json
+Authorization: 9e6e8c80-bc4b-4936-8ed8-debbe9c4c343
+
+### Detail Address
+GET http://localhost:3000/api/contacts/1444/addresses/104
+Content-Type: application/json
+Accept: application/json
+Authorization: 9e6e8c80-bc4b-4936-8ed8-debbe9c4c343
+
+### Update Address
+PUT http://localhost:3000/api/contacts/1444/addresses/101
+Content-Type: application/json
+Accept: application/json
+Authorization: 9e6e8c80-bc4b-4936-8ed8-debbe9c4c343
+
+{
+  "id": 101,
+  "street": "Jalan B",
+  "city": "Bandung",
+  "province": "Jawa Barat",
+  "country": "Indonesia",
+  "postal_code": "234234"
+}
+
+### Delete Address
+DELETE http://localhost:3000/api/contacts/1444/addresses/101
+Content-Type: application/json
+Accept: application/json
+Authorization: 9e6e8c80-bc4b-4936-8ed8-debbe9c4c343
