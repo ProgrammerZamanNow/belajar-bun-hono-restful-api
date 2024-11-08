@@ -227,3 +227,53 @@ describe("PUT /api/contacts/{contactId}/addresses/{addressId}", () => {
     });
 
 })
+
+describe("DELETE /api/contacts/{contactId}/addresses/{addressId}", () => {
+
+    beforeEach(async () => {
+        await AddressTest.deleteAll()
+        await ContactTest.deleteAll()
+        await UserTest.delete()
+
+        await UserTest.create()
+        await ContactTest.create()
+        await AddressTest.create()
+    })
+
+    afterEach(async () => {
+        await AddressTest.deleteAll()
+        await ContactTest.deleteAll()
+        await UserTest.delete()
+    })
+
+    it('should rejected if address is not exists', async () => {
+        const contact = await ContactTest.get()
+        const address = await AddressTest.get()
+        const response = await app.request('/api/contacts/' + contact.id + '/addresses/' + (address.id + 1), {
+            method: 'delete',
+            headers: {
+                'Authorization': 'test'
+            }
+        })
+
+        expect(response.status).toBe(404)
+        const body = await response.json()
+        expect(body.errors).toBeDefined()
+    });
+
+    it('should success if address is exists', async () => {
+        const contact = await ContactTest.get()
+        const address = await AddressTest.get()
+        const response = await app.request('/api/contacts/' + contact.id + '/addresses/' + address.id, {
+            method: 'delete',
+            headers: {
+                'Authorization': 'test'
+            }
+        })
+
+        expect(response.status).toBe(200)
+        const body = await response.json()
+        expect(body.data).toBeTrue()
+    });
+
+})
